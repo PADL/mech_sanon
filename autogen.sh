@@ -3,7 +3,5 @@
 # object tree, but this will do if you have all parts of the required
 # tool-chain installed
 set -e
+mkdir -p m4
 autoreconf -f -i || { echo "autoreconf failed: $?"; exit 1; }
-find . \( -name '*-private.h' -o -name '*-protos.h' \) | xargs rm -f
-perl -MJSON -e 'print foo;' || \
-    { echo "you must install JSON perl module (cpan install JSON)"; exit 1; }
