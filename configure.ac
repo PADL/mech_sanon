@@ -3,6 +3,7 @@ AC_INIT([mech_sanon], [1.0], [enquiry@padl.com])
 AC_LANG(C)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CANONICAL_HOST
 
 dnl AM_INIT_AUTOMAKE([silent-rules])
 AC_USE_SYSTEM_EXTENSIONS
@@ -20,9 +21,21 @@ AC_CHECK_FUNC(memset_s,
 	      AC_DEFINE(HAVE_MEMSET_S, 1,
 			[Define if you have the `memset_s' function]))
 
+#
+# -Bsymbolic-functions is necessary to avoid mech_sanon from
+# resolving GSS-API functions it implements and calls internally
+# in libgssapi_krb5
+#
+case "${host_os}" in
+    linux*)
+	LDFLAGS="$LDFLAGS -Wl,-Bsymbolic-functions"
+	;;
+    *)
+	;;
+esac
+
 AC_SUBST(TARGET_CFLAGS)
 AC_SUBST(TARGET_LDFLAGS)
-AX_CHECK_WINDOWS
 AX_CHECK_KRB5
 
 AC_CONFIG_FILES([Makefile])
