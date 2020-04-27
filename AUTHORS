@@ -1,0 +1,7 @@
+SAnon was designed and written by Luke Howard <lukeh@padl.com>, with input from
+Nicolas Williams <nico@cryptonector.com>. The work was sponsored by AuriStor,
+Inc.
+
+This port includes some code from Moonshot GSS EAP (autoconf), libsodium
+(curve25519), and MIT Kerberos (rfc4121).
+
