@@ -216,7 +216,7 @@ static uint8_t seed[16];
 /*
  * Determine the size required for this krb5_gss_ctx_id_rec.
  */
-krb5_error_code
+static krb5_error_code
 kg_ctx_size(krb5_context kcontext,
 	    gss_OID mech_used,
 	    krb5_principal dummy_principal,
@@ -470,7 +470,7 @@ kg_ctx_externalize(krb5_context kcontext,
 extern krb5_error_code krb5_ser_context_init(krb5_context);
 extern krb5_error_code krb5_ser_auth_context_init(krb5_context);
 
-krb5_error_code
+static krb5_error_code
 krb5_gss_ser_init (krb5_context context)
 {
     krb5_error_code code;
