@@ -231,7 +231,7 @@ OM_uint32 KRB5_CALLCONV
 #define MG_PASSTHRU_SYM(sym)	do { \
 	gss_mg_##sym = dlsym(RTLD_NEXT, "gss_" #sym);	\
 	if (gss_mg_##sym == NULL) {			\
-	    fprintf(stderr, "mech_sanon is missing symbol for %s; aborting\n", #sym); \
+	    fprintf(stderr, "mech_sanon is missing symbol for %s; aborting\n", "gss_" #sym); \
 	    fflush(stderr);				\
 	    abort();					\
 	}						\
