@@ -43,26 +43,11 @@ is_anonymous_identity_p(gss_buffer_t name_string, gss_OID name_type)
     else if (gss_oid_equal(name_type, GSS_C_NT_HOSTBASED_SERVICE) &&
 	buffer_equal_p(name_string, _gss_sanon_wellknown_service_name))
 	return TRUE;
+    else if (gss_oid_equal(name_type, GSS_C_NT_EXPORT_NAME) &&
+	buffer_equal_p(name_string, _gss_sanon_wellknown_export_name))
+	return TRUE;
 
     return FALSE;
-}
-
-static OM_uint32
-import_export_name(OM_uint32 *minor,
-		   const gss_buffer_t input_name_buffer,
-		   gss_name_t *output_name)
-{
-    *minor = 0;
-
-    if (input_name_buffer->length != _gss_sanon_wellknown_export_name->length ||
-	memcmp(input_name_buffer->value, _gss_sanon_wellknown_export_name->value,
-	       _gss_sanon_wellknown_export_name->length) != 0) {
-	*output_name = GSS_C_NO_NAME;
-	return GSS_S_BAD_NAME;
-    } else {
-	*output_name = _gss_sanon_anonymous_identity;
-	return GSS_S_COMPLETE;
-    }
 }
 
 OM_uint32 GSSAPI_CALLCONV
@@ -71,13 +56,20 @@ gss_import_name(OM_uint32 *minor,
 		gss_OID input_name_type,
 		gss_name_t *output_name)
 {
-    if (gss_oid_equal(input_name_type, GSS_C_NT_EXPORT_NAME))
-	return import_export_name(minor, input_name_buffer, output_name);
+    int is_anonymous;
 
     *minor = 0;
-    *output_name =
-	is_anonymous_identity_p(input_name_buffer, input_name_type) ?
-	    _gss_sanon_anonymous_identity : _gss_sanon_non_anonymous_identity;
+    is_anonymous = is_anonymous_identity_p(input_name_buffer, input_name_type);
+
+    if (gss_oid_equal(input_name_type, GSS_C_NT_EXPORT_NAME) &&
+	is_anonymous == FALSE) {
+	/* can't import non-anonymous names */
+	*output_name = GSS_C_NO_NAME;
+	return GSS_S_BAD_NAME;
+    }
+
+    *output_name = is_anonymous ? _gss_sanon_anonymous_identity
+				: _gss_sanon_non_anonymous_identity;
 
     return GSS_S_COMPLETE;
 }
