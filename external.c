@@ -33,6 +33,8 @@
 
 #include "sanon_locl.h"
 
+#include <stdio.h>
+
 static uint8_t anonymous_identity;
 gss_name_t
 _gss_sanon_anonymous_identity = (gss_name_t)&anonymous_identity;
@@ -226,25 +228,34 @@ OM_uint32 KRB5_CALLCONV
     const gss_OID,	/* desired_object */
     gss_buffer_set_t *) = NULL;	/* data_set */
 
+#define MG_PASSTHRU_SYM(sym)	do { \
+	gss_mg_##sym = dlsym(RTLD_NEXT, "gss_" #sym);	\
+	if (gss_mg_##sym == NULL) {			\
+	    fprintf(stderr, "mech_sanon is missing symbol for %s; aborting\n", #sym); \
+	    fflush(stderr);				\
+	    abort();					\
+	}						\
+    } while (0)
+
 static void
 _gss_sanon_mg_passthru_init(void)
 {
-    gss_mg_get_mic = dlsym(RTLD_NEXT, "gss_get_mic");
-    gss_mg_verify_mic = dlsym(RTLD_NEXT, "gss_verify_mic");
-    gss_mg_wrap = dlsym(RTLD_NEXT, "gss_wrap");
-    gss_mg_unwrap = dlsym(RTLD_NEXT, "gss_unwrap");
-    gss_mg_wrap_size_limit = dlsym(RTLD_NEXT, "gss_wrap_size_limit");
-    gss_mg_display_status = dlsym(RTLD_NEXT, "gss_display_status");
-    gss_mg_inquire_context = dlsym(RTLD_NEXT, "gss_inquire_context");
-    gss_mg_export_sec_context = dlsym(RTLD_NEXT, "gss_export_sec_context");
-    gss_mg_import_sec_context = dlsym(RTLD_NEXT, "gss_import_sec_context");
-    gss_mg_delete_sec_context = dlsym(RTLD_NEXT, "gss_delete_sec_context");
-    gss_mg_pseudo_random = dlsym(RTLD_NEXT, "gss_pseudo_random");
-    gss_mg_wrap_iov = dlsym(RTLD_NEXT, "gss_wrap_iov");
-    gss_mg_unwrap_iov = dlsym(RTLD_NEXT, "gss_unwrap_iov");
-    gss_mg_wrap_iov_length = dlsym(RTLD_NEXT, "gss_wrap_iov_length");
-    gss_mg_get_mic_iov = dlsym(RTLD_NEXT, "gss_get_mic_iov");
-    gss_mg_get_mic_iov_length = dlsym(RTLD_NEXT, "gss_get_mic_iov_length");
-    gss_mg_verify_mic_iov = dlsym(RTLD_NEXT, "gss_verify_mic_iov");
-    gss_mg_inquire_sec_context_by_oid = dlsym(RTLD_NEXT, "gss_inquire_sec_context_by_oid");
+    MG_PASSTHRU_SYM(get_mic);
+    MG_PASSTHRU_SYM(verify_mic);
+    MG_PASSTHRU_SYM(wrap);
+    MG_PASSTHRU_SYM(unwrap);
+    MG_PASSTHRU_SYM(wrap_size_limit);
+    MG_PASSTHRU_SYM(display_status);
+    MG_PASSTHRU_SYM(inquire_context);
+    MG_PASSTHRU_SYM(export_sec_context);
+    MG_PASSTHRU_SYM(import_sec_context);
+    MG_PASSTHRU_SYM(delete_sec_context);
+    MG_PASSTHRU_SYM(pseudo_random);
+    MG_PASSTHRU_SYM(wrap_iov);
+    MG_PASSTHRU_SYM(unwrap_iov);
+    MG_PASSTHRU_SYM(wrap_iov_length);
+    MG_PASSTHRU_SYM(get_mic_iov);
+    MG_PASSTHRU_SYM(get_mic_iov_length);
+    MG_PASSTHRU_SYM(verify_mic_iov);
+    MG_PASSTHRU_SYM(inquire_sec_context_by_oid);
 }
