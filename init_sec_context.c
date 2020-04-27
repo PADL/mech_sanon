@@ -40,6 +40,9 @@ _gss_sanon_available_p(gss_cred_id_t claimant_cred_handle,
     gss_name_t initiator_name = GSS_C_NO_NAME;
     int available;
 
+    if (_gss_sanon_mg_available == FALSE)
+	return FALSE;
+
     if (claimant_cred_handle != GSS_C_NO_CREDENTIAL) {
 	gss_inquire_cred(&minor, claimant_cred_handle,
 			 &initiator_name, NULL, NULL, NULL);

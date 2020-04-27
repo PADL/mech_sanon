@@ -114,6 +114,8 @@ SP800_108_HMAC(const struct krb5_hash_provider *hash,
 
 /* external.c */
 
+extern int _gss_sanon_mg_available;
+
 extern gss_name_t _gss_sanon_anonymous_identity;
 extern gss_name_t _gss_sanon_non_anonymous_identity;
 

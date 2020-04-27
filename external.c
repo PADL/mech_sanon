@@ -228,18 +228,23 @@ OM_uint32 KRB5_CALLCONV
     const gss_OID,	/* desired_object */
     gss_buffer_set_t *) = NULL;	/* data_set */
 
+int
+_gss_sanon_mg_available = -1;
+
 #define MG_PASSTHRU_SYM(sym)	do { \
 	gss_mg_##sym = dlsym(RTLD_NEXT, "gss_" #sym);	\
 	if (gss_mg_##sym == NULL) {			\
-	    fprintf(stderr, "mech_sanon is missing symbol for %s; aborting\n", "gss_" #sym); \
+	    fprintf(stderr, "mech_sanon is missing symbol for %s\n", "gss_" #sym); \
 	    fflush(stderr);				\
-	    abort();					\
+	    did_init = 0;				\
 	}						\
     } while (0)
 
 static void
 _gss_sanon_mg_passthru_init(void)
 {
+    int did_init = 1;
+
     MG_PASSTHRU_SYM(get_mic);
     MG_PASSTHRU_SYM(verify_mic);
     MG_PASSTHRU_SYM(wrap);
@@ -258,4 +263,6 @@ _gss_sanon_mg_passthru_init(void)
     MG_PASSTHRU_SYM(get_mic_iov_length);
     MG_PASSTHRU_SYM(verify_mic_iov);
     MG_PASSTHRU_SYM(inquire_sec_context_by_oid);
+
+    _gss_sanon_mg_available = did_init;
 }

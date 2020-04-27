@@ -34,7 +34,7 @@
 OM_uint32 GSSAPI_CALLCONV
 gss_accept_sec_context(OM_uint32 *minor,
 		       gss_ctx_id_t *context_handle,
-		       gss_cred_id_t verifier_cred_handle __attribute__((__unused__)),
+		       gss_cred_id_t verifier_cred_handle,
 		       gss_buffer_t input_token,
 		       gss_channel_bindings_t input_chan_bindings,
 		       gss_name_t *src_name,
@@ -52,6 +52,13 @@ gss_accept_sec_context(OM_uint32 *minor,
     gss_buffer_desc hok_mic = GSS_C_EMPTY_BUFFER;
     gss_buffer_desc session_key = GSS_C_EMPTY_BUFFER;
     OM_uint32 req_flags = 0;
+
+    /* this also checks the mechglue library was loaded properly */
+    if (!_gss_sanon_available_p(verifier_cred_handle,
+				GSS_C_NO_NAME, GSS_C_ANON_FLAG)) {
+	major = GSS_S_UNAVAILABLE;
+	goto out;
+    }
 
     if (output_token == GSS_C_NO_BUFFER) {
 	*minor = EINVAL;
