@@ -1,0 +1,7 @@
+
+SAnon
+=====
+
+This is a port of Heimdal's simple anonymous GSS-API mechanism to MIT. It will
+not work with Heimdal; use Heimdal for that.
+
