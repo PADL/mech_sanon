@@ -22,8 +22,8 @@
  * or implied warranty.
  */
 
-#ifndef MIT_SER_H
-#define MIT_SER_H 1
+#ifndef MIT_SERIALIZATION_H
+#define MIT_SERIALIZATION_H 1
 
 #include "config.h"
 
