@@ -40,7 +40,7 @@ _gss_sanon_available_p(gss_cred_id_t claimant_cred_handle,
     gss_name_t initiator_name = GSS_C_NO_NAME;
     int available;
 
-    if (_gss_sanon_mg_available == FALSE)
+    if (!_gss_sanon_mg_available)
 	return FALSE;
 
     if (claimant_cred_handle != GSS_C_NO_CREDENTIAL) {
