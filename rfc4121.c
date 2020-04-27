@@ -126,9 +126,9 @@ rfc4121_ctx_size(krb5_context kcontext,
 	       krb5_principal dummy_principal,
 	       g_seqnum_state seqstate,
 	       krb5_auth_context dummy_auth_context,
-	    krb5_keyblock *acceptor_subkey,
-	    krb5_authdata_context dummy_authdata_context,
-	    size_t *sizep)
+	       krb5_keyblock *acceptor_subkey,
+	       krb5_authdata_context dummy_authdata_context,
+	       size_t *sizep)
 {
     krb5_error_code     kret;
     size_t	      required;
@@ -250,8 +250,8 @@ rfc4121_ctx_externalize(krb5_context kcontext,
     remain = *lenremain;
     kret = ENOMEM;
     if (!rfc4121_ctx_size(kcontext, mech_used, dummy_principal, seqstate,
-			  dummy_auth_context, acceptor_subkey, dummy_authdata_context,
-			  &required) &&
+			  dummy_auth_context, acceptor_subkey,
+			  dummy_authdata_context, &required) &&
 	(required <= remain)) {
 	/* GSS token framing */
 	kret = krb5_ser_pack_int32(mech_used->length, &bp, &remain);
@@ -442,9 +442,9 @@ _gss_mg_import_rfc4121_context(OM_uint32 *minor,
     if (ret == 0)
 	ret = krb5_authdata_context_init(context, &dummy_authdata_context);
     if (ret == 0)
-	ret = rfc4121_ctx_size(context, gss_mech_krb5, dummy_principal, &seqstate,
-			  dummy_auth_context, &keyblock, dummy_authdata_context,
-			  &size);
+	ret = rfc4121_ctx_size(context, gss_mech_krb5, dummy_principal,
+			       &seqstate, dummy_auth_context, &keyblock,
+			       dummy_authdata_context, &size);
     if (ret == 0) {
 	bufp = buffer = calloc(1, size);
 	if (buffer == NULL)
@@ -459,10 +459,10 @@ _gss_mg_import_rfc4121_context(OM_uint32 *minor,
     }
     if (ret == 0) {
 	ret = rfc4121_ctx_externalize(context, is_initiator, gss_flags,
-				 gss_mech_krb5, dummy_principal,
-				 &seqstate, cksumtypes[count - 1],
-				 dummy_auth_context, &keyblock,
-				 dummy_authdata_context, &bufp, &lenremain);
+				      gss_mech_krb5, dummy_principal,
+				      &seqstate, cksumtypes[count - 1],
+				      dummy_auth_context, &keyblock,
+				      dummy_authdata_context, &bufp, &lenremain);
     }
     if (ret == 0) {
 	gss_buffer_desc token;
