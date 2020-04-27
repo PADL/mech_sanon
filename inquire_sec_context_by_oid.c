@@ -52,9 +52,11 @@ gss_inquire_sec_context_by_oid(OM_uint32 *minor,
         gss_oid_equal(desired_object, &export_lucid_sec_context_oid_desc))
 	return gss_mg_inquire_sec_context_by_oid(minor, sc->rfc4121,
 						 desired_object, data_set);
+#ifdef HAVE_GSS_C_INQ_NEGOEX_KEY
     else if (gss_oid_equal(desired_object, GSS_C_INQ_NEGOEX_KEY) ||
 	     gss_oid_equal(desired_object, GSS_C_INQ_NEGOEX_VERIFY_KEY))
 	return _gss_sanon_inquire_negoex_key(minor, sc, desired_object, data_set);
+#endif
     else {
 	*minor = EINVAL;
 	return GSS_S_UNAVAILABLE;

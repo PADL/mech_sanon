@@ -62,6 +62,25 @@ krb5_ser_pack_int64(int64_t, krb5_octet **, size_t *);
 extern krb5_error_code KRB5_CALLCONV
 krb5_ser_pack_bytes(krb5_octet *, size_t, krb5_octet **, size_t *);
 
+typedef struct _krb5_authdata_context *krb5_authdata_context;
+
+extern krb5_error_code
+krb5_authdata_context_init(krb5_context kcontext,
+                           krb5_authdata_context *pcontext);
+
+extern void
+krb5_authdata_context_free(krb5_context kcontext,
+                           krb5_authdata_context context);
+
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+extern krb5_error_code
+krb5_size_opaque(krb5_context kcontext, krb5_magic odtype,
+		 krb5_pointer arg, size_t *sizep);
+
+extern krb5_error_code
+krb5_externalize_opaque(krb5_context kcontext, krb5_magic odtype,
+			krb5_pointer arg, krb5_octet **bufpp, size_t *sizep);
+#else
 extern krb5_error_code
 k5_size_context(krb5_context context, size_t *sizep);
 
@@ -90,16 +109,6 @@ extern krb5_error_code
 k5_externalize_auth_context(krb5_auth_context auth_context,
 			    krb5_octet **buffer, size_t *lenremain);
 
-typedef struct _krb5_authdata_context *krb5_authdata_context;
-
-extern krb5_error_code
-krb5_authdata_context_init(krb5_context kcontext,
-                           krb5_authdata_context *pcontext);
-
-extern void
-krb5_authdata_context_free(krb5_context kcontext,
-                           krb5_authdata_context context);
-
 extern krb5_error_code
 k5_size_authdata_context(krb5_context kcontext, krb5_authdata_context context,
                          size_t *sizep);
@@ -108,6 +117,7 @@ extern krb5_error_code
 k5_externalize_authdata_context(krb5_context kcontext,
                                 krb5_authdata_context context,
                                 krb5_octet **buffer, size_t *lenremain);
+#endif /* HAVE_KRB5_EXTERNALIZE_OPAQUE */
 
 static krb5_error_code
 kg_oid_externalize(gss_OID oid, krb5_octet **buffer, size_t *lenremain)
@@ -264,13 +274,36 @@ kg_ctx_size(krb5_context kcontext,
     kret = 0;
 
     if (!kret)
-	kret = k5_size_principal(dummy_principal, &required);
-    if (!kret)
-	kret = k5_size_principal(dummy_principal, &required);
-    if (!kret)
 	kret = kg_oid_size(mech_used, &required);
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+    if (!kret)
+	kret = krb5_size_opaque(kcontext, KV5M_PRINCIPAL,
+				dummy_principal, &required);
+    if (!kret)
+	kret = krb5_size_opaque(kcontext, KV5M_PRINCIPAL,
+				dummy_principal, &required);
+#else
+    if (!kret)
+	kret = k5_size_principal(dummy_principal, &required);
+    if (!kret)
+	kret = k5_size_principal(dummy_principal, &required);
+#endif
     if (!kret)
 	kret = kg_seqstate_size(seqstate, &required);
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+    if (!kret)
+	kret = krb5_size_opaque(kcontext, KV5M_CONTEXT,
+				kcontext, &required);
+    if (!kret)
+	kret = krb5_size_opaque(kcontext, KV5M_AUTH_CONTEXT,
+				dummy_auth_context, &required);
+    if (!kret)
+	kret = krb5_size_opaque(kcontext, KV5M_KEYBLOCK,
+				acceptor_subkey, &required);
+    if (!kret)
+	kret = krb5_size_opaque(kcontext, KV5M_AUTHDATA_CONTEXT,
+				dummy_authdata_context, &required);
+#else
     if (!kret)
 	kret = k5_size_context(kcontext, &required);
     if (!kret)
@@ -279,6 +312,7 @@ kg_ctx_size(krb5_context kcontext,
 	kret = k5_size_keyblock(acceptor_subkey, &required);
     if (!kret)
 	kret = k5_size_authdata_context(kcontext, dummy_authdata_context, &required);
+#endif
     *sizep += required;
 
     return(kret);
@@ -361,27 +395,50 @@ kg_ctx_externalize(krb5_context kcontext,
 	/* Now dynamic data */
 	if (!kret)
 	    kret = kg_oid_externalize(mech_used, &bp, &remain);
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+	if (!kret)
+	    kret = krb5_externalize_opaque(kcontext, KV5M_PRINCIPAL,
+					   dummy_principal, &bp, &remain);
+	if (!kret)
+	    kret = krb5_externalize_opaque(kcontext, KV5M_PRINCIPAL,
+					   dummy_principal, &bp, &remain);
+#else
 	if (!kret)
 	    kret = k5_externalize_principal(dummy_principal, &bp, &remain);
 	if (!kret)
 	    kret = k5_externalize_principal(dummy_principal, &bp, &remain);
+#endif
 	if (!kret)
 	    kret = kg_seqstate_externalize(seqstate, &bp, &remain);
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+	if (!kret)
+	    kret = krb5_externalize_opaque(kcontext, KV5M_CONTEXT,
+					   kcontext, &bp, &remain);
+	if (!kret)
+	    kret = krb5_externalize_opaque(kcontext, KV5M_AUTH_CONTEXT,
+					   dummy_auth_context, &bp, &remain);
+#else
 	if (!kret)
 	    kret = k5_externalize_context(kcontext, &bp, &remain);
 
 	if (!kret)
 	    kret = k5_externalize_auth_context(dummy_auth_context,
 					       &bp, &remain);
-
+#endif
 	if (!kret)
 	    kret = krb5_ser_pack_int32(1, &bp, &remain); /* proto 1 is RFC4121 */
 	if (!kret)
 	    kret = krb5_ser_pack_int32((krb5_int32) cksumtype,
 				       &bp, &remain);
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+	if (!kret)
+	    kret = krb5_externalize_opaque(kcontext, KV5M_KEYBLOCK,
+					   acceptor_subkey, &bp, &remain);
+#else
 	if (!kret)
 	    kret = k5_externalize_keyblock(acceptor_subkey,
 					   &bp, &remain);
+#endif
 	if (!kret)
 	    kret = krb5_ser_pack_int32((krb5_int32) cksumtype, /* acceptor subkey cksumtype */
 				       &bp, &remain);
@@ -390,8 +447,13 @@ kg_ctx_externalize(krb5_context kcontext,
 	if (!kret)
 	    kret = krb5_ser_pack_int32(0, &bp, &remain); /* auth_data count */
 	if (!kret)
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+	    kret = krb5_externalize_opaque(kcontext, KV5M_AUTHDATA_CONTEXT,
+					   dummy_authdata_context, &bp, &remain);
+#else
 	    kret = k5_externalize_authdata_context(kcontext, dummy_authdata_context,
 						   &bp, &remain);
+#endif
 	/* trailer */
 	if (!kret)
 	    kret = krb5_ser_pack_int32(KG_CONTEXT, &bp, &remain);
@@ -403,6 +465,26 @@ kg_ctx_externalize(krb5_context kcontext,
 
     return kret;
 }
+
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+extern krb5_error_code krb5_ser_context_init(krb5_context);
+extern krb5_error_code krb5_ser_auth_context_init(krb5_context);
+
+krb5_error_code
+krb5_gss_ser_init (krb5_context context)
+{
+    krb5_error_code code;
+    static krb5_error_code (KRB5_CALLCONV *const fns[])(krb5_context) = {
+        krb5_ser_context_init, krb5_ser_auth_context_init,
+    };
+    unsigned int i;
+
+    for (i = 0; i < sizeof(fns)/sizeof(fns[0]); i++)
+        if ((code = (fns[i])(context)) != 0)
+            return code;
+    return 0;
+}
+#endif /* HAVE_KRB5_EXTERNALIZE_OPAQUE */
 
 OM_uint32
 _gss_mg_import_rfc4121_context(OM_uint32 *minor,
@@ -445,6 +527,10 @@ _gss_mg_import_rfc4121_context(OM_uint32 *minor,
     keyblock.contents = session_key->value;
 
     ret = krb5_init_context(&context);
+#ifdef HAVE_KRB5_EXTERNALIZE_OPAQUE
+    if (ret == 0)
+	ret = krb5_gss_ser_init(context);
+#endif
     if (ret == 0)
 	ret = krb5_parse_name(context, SANON_WELLKNOWN_USER_NAME, &dummy_principal);
     if (ret == 0)
