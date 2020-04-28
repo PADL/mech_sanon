@@ -431,9 +431,6 @@ _gss_mg_import_rfc4121_context(OM_uint32 *minor,
     *minor = 0;
     *ctx = GSS_C_NO_CONTEXT;
 
-    if (gss_mg_import_sec_context == NULL)
-	return GSS_S_UNAVAILABLE;
-
     memset(&seqstate, 0, sizeof(seqstate));
     if (gss_flags & GSS_C_REPLAY_FLAG)
 	seqstate.do_replay = 1;
