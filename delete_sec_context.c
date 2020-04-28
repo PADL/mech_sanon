@@ -55,7 +55,7 @@ gss_delete_sec_context(OM_uint32 *minor,
     if (sc->rfc4121 != GSS_C_NO_CONTEXT)
 	gss_mg_delete_sec_context(minor, &sc->rfc4121, GSS_C_NO_BUFFER);
 
-    zap(sc, sizeof(*sc));
+    secure_zero_memory(sc, sizeof(*sc));
     free(sc);
 
     return GSS_S_COMPLETE;

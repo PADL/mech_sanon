@@ -472,10 +472,7 @@ _gss_mg_import_rfc4121_context(OM_uint32 *minor,
     if (ret == 0)
 	major = gss_mg_import_sec_context(minor, &token, ctx);
 
-    if (token.value) {
-	zap(token.value, token.length);
-	free(token.value);
-    }
+    secure_zero_release_buffer(&token);
     krb5_free_cksumtypes(context, cksumtypes);
     krb5_authdata_context_free(context, dummy_authdata_context);
     krb5_auth_con_free(context, dummy_auth_context);

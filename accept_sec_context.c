@@ -166,7 +166,7 @@ out:
     }
     gss_release_buffer(&tmp, &mech_input_token);
     gss_release_buffer(&tmp, &hok_mic);
-    zap_release_buffer(&session_key);
+    secure_zero_release_buffer(&session_key);
 
     return major;
 }

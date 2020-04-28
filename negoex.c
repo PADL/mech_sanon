@@ -91,7 +91,7 @@ _gss_sanon_inquire_negoex_key(OM_uint32 *minor,
     if (major == GSS_S_COMPLETE)
 	major = gss_add_buffer_set_member(minor, &keytype, data_set);
 
-    zap_release_buffer(&keyvalue);
+    secure_zero_release_buffer(&keyvalue);
 
     return major;
 }

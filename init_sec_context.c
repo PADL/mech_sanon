@@ -201,7 +201,7 @@ out:
 	gss_delete_sec_context(&tmp, (gss_ctx_id_t *)&sc, GSS_C_NO_BUFFER);
 	*context_handle = GSS_C_NO_CONTEXT;
     }
-    zap_release_buffer(&session_key);
+    secure_zero_release_buffer(&session_key);
 
     return major;
 }

@@ -383,7 +383,7 @@ _gss_sanon_curve25519(OM_uint32 *minor,
     keydata.data = NULL;
 
 out:
-    zap(kdf_context.data, kdf_context.length);
+    secure_zero_memory(kdf_context.data, kdf_context.length);
     krb5_free_data_contents(context, &kdf_context);
     krb5_free_data_contents(context, &keydata);
 
@@ -392,7 +392,7 @@ out:
     if (context)
 	krb5_free_context(context);
 
-    zap(shared, sizeof(shared));
+    secure_zero_memory(shared, sizeof(shared));
 
     *minor = ret;
     return ret != 0 ? GSS_S_FAILURE : GSS_S_COMPLETE;

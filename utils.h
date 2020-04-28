@@ -149,7 +149,7 @@ decode_le_uint32(const void *ptr, uint32_t *n)
 }
 
 static inline void
-zap(void *s, size_t n)
+secure_zero_memory(void *s, size_t n)
 {
 #ifdef HAVE_MEMSET_S
     if (n)
@@ -162,12 +162,13 @@ zap(void *s, size_t n)
 }
 
 static inline void
-zap_release_buffer(gss_buffer_t buffer)
+secure_zero_release_buffer(gss_buffer_t buffer)
 {
     OM_uint32 tmp;
 
     if (buffer != GSS_C_NO_BUFFER && buffer->value)
-	zap(buffer->value, buffer->length);
+	secure_zero_memory(buffer->value, buffer->length);
+
     gss_release_buffer(&tmp, buffer);
 }
 
