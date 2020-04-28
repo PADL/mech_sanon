@@ -136,14 +136,10 @@ gss_accept_sec_context(OM_uint32 *minor,
     if (major != GSS_S_COMPLETE)
 	goto out;
 
-    output_token->length = sizeof(sc->pk) + hok_mic.length;
-    output_token->value = malloc(output_token->length);
-    if (output_token->value == NULL) {
-	output_token->length = 0;
-	*minor = ENOMEM;
-	major = GSS_S_FAILURE;
+    major = alloc_buffer(minor, output_token,
+			 sizeof(sc->pk) + hok_mic.length);
+    if (major != GSS_S_COMPLETE)
 	goto out;
-    }
 
     memcpy(output_token->value, sc->pk, sizeof(sc->pk));
     memcpy((uint8_t *)output_token->value + sizeof(sc->pk), hok_mic.value, hok_mic.length);
