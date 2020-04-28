@@ -11,12 +11,10 @@ before_install:
 
 install:
     - cd ci-build
-    - ../configure --srcdir=`dirname "$PWD"` --enable-maintainer-mode $COVERAGE
+    - ../configure --srcdir=`dirname "$PWD"` --enable-maintainer-mode
     - ulimit -c unlimited; make -j3
 
 after_failure:
-    - find . -name test-suite.log -print0 | xargs -0 cat
-    - if [ $TRAVIS_OS_NAME = linux ]; then echo "thread apply all bt" > x; find . -name core.\* -print | while read gdb; do gdb -batch -x x `file "$core"|sed -e "s/^[^']*'//" -e "s/[ '].*$//"` "$core"; done; fi
 
 compiler:
     - clang
