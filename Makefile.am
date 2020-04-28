@@ -46,3 +46,6 @@ mech_sanon_la_SOURCES =    		\
 	rfc4121.c			\
 	x25519/ed25519_ref10.c		\
 	x25519/x25519_ref10.c
+
+test:
+
