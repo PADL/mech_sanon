@@ -36,20 +36,31 @@ gss_import_sec_context(OM_uint32 *minor,
 		       gss_buffer_t interprocess_token,
 		       gss_ctx_id_t *context_handle)
 {
-    OM_uint32 major = GSS_S_FAILURE;
+    OM_uint32 major;
     sanon_ctx sc;
 
-    *minor = ENOMEM;
     *context_handle = GSS_C_NO_CONTEXT;
 
-    if ((sc = calloc(1, sizeof(*sc))) &&
-        (major = gss_mg_import_sec_context(minor,
-					   interprocess_token,
-					   &sc->rfc4121)) == GSS_S_COMPLETE) {
-        *context_handle = (gss_ctx_id_t)sc;
-        sc = NULL;
+    /* this checks the mechglue library was loaded properly */
+    if (!_gss_sanon_available_p(GSS_C_NO_CREDENTIAL,
+				GSS_C_NO_NAME, GSS_C_ANON_FLAG)) {
+	*minor = 0;
+	return GSS_S_UNAVAILABLE;
     }
 
-    free(sc);
-    return major;
+    sc = calloc(1, sizeof(*sc));
+    if (sc == NULL) {
+	*minor = ENOMEM;
+	return GSS_S_FAILURE;
+    }
+
+    major = gss_mg_import_sec_context(minor, interprocess_token,
+				      &sc->rfc4121);
+    if (major != GSS_S_COMPLETE) {
+	free(sc);
+	return major;
+    }
+
+    *context_handle = (gss_ctx_id_t)sc;
+    return GSS_S_COMPLETE;
 }
