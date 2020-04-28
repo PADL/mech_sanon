@@ -193,7 +193,8 @@ main(void)
     gss_cred_id_t initiator_cred_handle = GSS_C_NO_CREDENTIAL;
     gss_OID_set actual_mechs = GSS_C_NO_OID_SET;
     gss_ctx_id_t initiator_context, acceptor_context;
-    gss_name_t target_name = import_name("a:"), source_name = GSS_C_NO_NAME;
+    gss_name_t target_name = import_name("h:host@localhost");
+    gss_name_t source_name = GSS_C_NO_NAME;
     gss_OID mech = GSS_C_NO_OID;
 
     /* Get default initiator cred. */
