@@ -40,11 +40,11 @@ size_t crypto_scalarmult_curve25519_scalarbytes(void);
  *
  * Or unless this is not an option, use the crypto_kx() API instead.
  */
-#define crypto_scalarmult_curve25519 hc_hcrypto_scalarmult_curve25519
+#define crypto_scalarmult_curve25519 _gss_sanon_scalarmult_curve25519
 int crypto_scalarmult_curve25519(unsigned char *q, const unsigned char *n,
                                  const unsigned char *p);
 
-#define crypto_scalarmult_curve25519_base hc_hcrypto_scalarmult_curve25519_base
+#define crypto_scalarmult_curve25519_base _gss_sanon_scalarmult_curve25519_base
 int crypto_scalarmult_curve25519_base(unsigned char *q,
                                       const unsigned char *n);
 
