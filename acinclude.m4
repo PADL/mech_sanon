@@ -64,7 +64,7 @@ if test x_$found_krb5 != x_yes; then
 ----------------------------------------------------------------------
   Cannot find GSS-API/Kerberos libraries.
 
-  Please install MIT or Heimdal or specify installation directory with
+  Please install MIT Kerberos or specify installation directory with
   --with-krb5=(dir).
 ----------------------------------------------------------------------
 ])
