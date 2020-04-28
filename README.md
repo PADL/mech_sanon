@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/PADL/mech_sanon.svg?branch=master)](https://travis-ci.org/PADL/mech_sanon)
+[![Build Status](https://travis-ci.com/PADL/mech_sanon.svg?branch=master)](https://travis-ci.com/github/PADL/mech_sanon)
 
 SAnon
 =====
