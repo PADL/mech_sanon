@@ -378,6 +378,12 @@ rfc4121_ctx_externalize(krb5_context kcontext,
 	    ret = krb5_ser_pack_int32(KG_CONTEXT, &bp, &remain);
     }
 
+    /*
+     * remain should be zero on successful completion, but some versions
+     * of MIT do not calculate the size correctly
+     */
+    token->length -= remain;
+
     return ret;
 }
 
