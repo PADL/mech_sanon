@@ -50,6 +50,7 @@
 #include <inttypes.h>
 #endif
 #include <errno.h>
+#include <assert.h>
 
 #include <krb5.h>
 #include <gssapi/gssapi.h>
