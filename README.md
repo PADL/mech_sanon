@@ -20,8 +20,7 @@ You will then need to (again, adjusting prefixes) copy the mech file to `/usr/lo
 
 ```
 % ./gss-server -port 5555 host@localhost
-% ./gss-client -port 5555 -spnego -user WELLKNOWN/ANONYMOUS@WELLKNOWN:ANONYMOUS \
-  localhost host@localhost Testing
+% ./gss-client -port 5555 -spnego -user WELLKNOWN/ANONYMOUS@WELLKNOWN:ANONYMOUS localhost host@localhost Testing
 ```
 
 Questions? Email me at lukeh@padl.com.
