@@ -3,7 +3,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 gssincludedir = $(includedir)/gssapi
 
-GSSSANON_EXPORTS = mech_sanon.exports
+GSSSANON_EXPORTS = $(srcdir)/mech_sanon.exports
 
 gssdir = $(libdir)/gss
 gss_LTLIBRARIES = mech_sanon.la
