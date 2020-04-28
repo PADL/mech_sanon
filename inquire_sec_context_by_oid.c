@@ -31,7 +31,8 @@
 
 #include "sanon_locl.h"
 
-static gss_OID_desc export_lucid_sec_context_oid_desc = {
+static gss_OID_desc
+export_lucid_sec_context_oid_desc = {
     11, "\x2a\x86\x48\x86\xf7\x12\x01\x02\x02\x05\x06"
 };
 
