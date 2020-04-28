@@ -32,30 +32,6 @@
 #ifndef UTILS_H
 #define UTILS_H 1
 
-static inline void
-zero_data(krb5_data *data)
-{
-    data->magic = KV5M_DATA;
-    data->data = NULL;
-    data->length = 0;
-}
-
-static inline krb5_error_code
-alloc_data(krb5_data *data, size_t len)
-{
-    char *ptr;
-
-    ptr = malloc(len);
-    if (ptr == NULL)
-	return ENOMEM;
-
-    data->magic = KV5M_DATA;
-    data->data = ptr;
-    data->length = len;
-
-    return 0;
-}
-
 static inline krb5_data
 make_data(uint8_t *ptr, size_t len)
 {
@@ -66,6 +42,25 @@ make_data(uint8_t *ptr, size_t len)
     d.length = len;
 
     return d;
+}
+
+static inline void
+zero_data(krb5_data *data)
+{
+    *data = make_data(NULL, 0);
+}
+
+static inline krb5_error_code
+alloc_data(krb5_data *data, size_t len)
+{
+    *data = make_data(malloc(len), len);
+
+    if (data->data == NULL) {
+	data->length = 0;
+	return ENOMEM;
+    }
+
+    return 0;
 }
 
 static inline int
