@@ -38,9 +38,12 @@ gss_display_status(OM_uint32 *minor,
 		   OM_uint32 status_value,
 		   int status_type,
 		   const gss_OID mech_type,
-		   OM_uint32 *message_context,
+		   OM_uint32 *message_context __attribute__((__unused__)),
 		   gss_buffer_t status_string)
 {
+    OM_uint32 major = GSS_S_FAILURE;
+    krb5_context context;
+
     status_string->length = 0;
     status_string->value = NULL;
 
@@ -50,13 +53,23 @@ gss_display_status(OM_uint32 *minor,
 	return GSS_S_BAD_MECH;
     }
 
-    if (status_type == GSS_C_MECH_CODE &&
-	gss_mg_display_status != NULL) {
-	return gss_mg_display_status(minor, status_value,
-				     GSS_C_MECH_CODE, gss_mech_krb5,
-				     message_context, status_string);
-    } else {
+    if (status_type != GSS_C_MECH_CODE) {
 	*minor = EINVAL;
 	return GSS_S_BAD_STATUS;
     }
+
+    /* calling into mechglue seems to infinite loop, so */
+    *minor = krb5_init_context(&context);
+    if (*minor == 0) {
+	const char *error = krb5_get_error_message(context, status_value);
+
+	if (error) {
+	    major = make_string_buffer(minor, error, status_string);
+	    krb5_free_error_message(context, error);
+	}
+    }
+
+    krb5_free_context(context);
+
+    return major;
 }
