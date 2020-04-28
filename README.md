@@ -23,4 +23,14 @@ You will then need to (again, adjusting prefixes) copy the mech file to `/usr/lo
 % ./gss-client -port 5555 -spnego -user WELLKNOWN/ANONYMOUS@WELLKNOWN:ANONYMOUS localhost host@localhost Testing
 ```
 
-Questions? Email me at lukeh@padl.com.
+or using the included `test_sanon` program:
+
+```
+% ./test_sanon
+Source name:	WELLKNOWN/ANONYMOUS@WELLKNOWN:ANONYMOUS
+Source mech:	{ 1 3 6 1 4 1 5322 26 1 110 }
+```
+
+With recent versions of MIT Kerberos, it is possible to specify a path to the GSS-API mechanism configuration using the `GSS_MECH_CONFIG` environment variable. This enables testing of SAnon prior to installation.
+
+Questions? I can be contacted at lukeh@padl.com.
