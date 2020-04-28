@@ -47,5 +47,12 @@ mech_sanon_la_SOURCES =    		\
 	x25519/ed25519_ref10.c		\
 	x25519/x25519_ref10.c
 
+noinst_PROGRAMS = test_sanon
+
+test_sanon_CFLAGS  = -Werror -Wall -Wunused-parameter @KRB5_CFLAGS@
+test_sanon_SOURCES = test_sanon.c
+test_sanon_LDFLAGS = @KRB5_LDFLAGS@
+test_sanon_LDADD   = @KRB5_LIBS@
+
 test:
 
