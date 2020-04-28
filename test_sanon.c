@@ -36,7 +36,7 @@
 #include <assert.h>
 
 #include <gssapi/gssapi.h>
-#include <gssapi/gssapi_krb5.h>
+#include <gssapi/gssapi_ext.h>
 
 static gss_OID_desc mech_sanon = { 10, "\x2b\x06\x01\x04\x01\xa9\x4a\x1a\x01\x6e" };
 static gss_OID_set_desc mechset_sanon = { 1, &mech_sanon };
@@ -69,19 +69,6 @@ check_gsserr(const char *msg, OM_uint32 major, OM_uint32 minor)
 }
 
 void
-check_k5err(krb5_context context, const char *msg, krb5_error_code code)
-{
-    const char *errmsg;
-
-    if (code) {
-        errmsg = krb5_get_error_message(context, code);
-        printf("%s: %s\n", msg, errmsg);
-        krb5_free_error_message(context, errmsg);
-        exit(1);
-    }
-}
-
-void
 errout(const char *msg)
 {
     fprintf(stderr, "%s\n", msg);
@@ -98,8 +85,6 @@ import_name(const char *str)
 
     if (*str == 'u')
         nametype = GSS_C_NT_USER_NAME;
-    else if (*str == 'p')
-        nametype = (gss_OID)GSS_KRB5_NT_PRINCIPAL_NAME;
     else if (*str == 'h')
         nametype = GSS_C_NT_HOSTBASED_SERVICE;
     else if (*str == 'a')
