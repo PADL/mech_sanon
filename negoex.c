@@ -31,6 +31,8 @@
 
 #include "sanon_locl.h"
 
+#ifdef HAVE_GSS_C_INQ_NEGOEX_KEY
+
 OM_uint32 GSSAPI_CALLCONV
 gssspi_query_mechanism_info(OM_uint32 *minor,
 			    gss_const_OID mech_oid __attribute__((__unused__)),
@@ -45,7 +47,6 @@ gssspi_query_mechanism_info(OM_uint32 *minor,
     return GSS_S_COMPLETE;
 }
 
-#ifdef HAVE_GSS_C_INQ_NEGOEX_KEY
 OM_uint32
 _gss_sanon_inquire_negoex_key(OM_uint32 *minor,
 			      const sanon_ctx sc,
@@ -94,7 +95,6 @@ _gss_sanon_inquire_negoex_key(OM_uint32 *minor,
 
     return major;
 }
-#endif /* HAVE_GSS_C_INQ_NEGOEX_KEY */
 
 OM_uint32
 gssspi_query_meta_data(OM_uint32 *minor,
@@ -128,3 +128,5 @@ gssspi_exchange_meta_data(OM_uint32 *minor,
     *minor = 0;
     return GSS_S_COMPLETE;
 }
+
+#endif /* HAVE_GSS_C_INQ_NEGOEX_KEY */

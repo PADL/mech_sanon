@@ -297,11 +297,13 @@ _gss_sanon_available_p(gss_cred_id_t claimant_cred_handle,
 
 /* negoex.c */
 
+#ifdef HAVE_GSS_C_INQ_NEGOEX_KEY
 OM_uint32
 _gss_sanon_inquire_negoex_key(OM_uint32 *minor,
 			      const sanon_ctx sc,
 			      gss_const_OID desired_object,
 			      gss_buffer_set_t *data_set);
+#endif /* HAVE_GSS_C_INQ_NEGOEX_KEY */
 
 /* rfc4121.c */
 OM_uint32

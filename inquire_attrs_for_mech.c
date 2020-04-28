@@ -76,7 +76,7 @@ gss_inquire_attrs_for_mech(OM_uint32 *minor,
         MA_SUPPORTED(GSS_C_MA_OOS_DET);
         MA_SUPPORTED(GSS_C_MA_CBINDINGS);
         MA_SUPPORTED(GSS_C_MA_CTX_TRANS);
-# ifdef HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO
+# if defined(HAVE_GSS_C_INQ_NEGOEX_KEY) && defined(HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO)
         MA_SUPPORTED(GSS_C_MA_NEGOEX_AND_SPNEGO);
 # endif
 #endif
@@ -115,7 +115,7 @@ gss_inquire_attrs_for_mech(OM_uint32 *minor,
         MA_KNOWN(GSS_C_MA_PFS);
         MA_KNOWN(GSS_C_MA_COMPRESS);
         MA_KNOWN(GSS_C_MA_CTX_TRANS);
-# ifdef HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO
+# if defined(HAVE_GSS_C_INQ_NEGOEX_KEY) && defined(HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO)
         MA_KNOWN(GSS_C_MA_NEGOEX_AND_SPNEGO);
 # endif
 #endif
