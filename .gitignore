@@ -7,6 +7,7 @@ config.*
 ltmain.sh
 libtool
 mech_sanon.la
+mech-test
 test_sanon
 depcomp
 m4

@@ -1,6 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = -I m4
 
+CLEANFILES = mech-test
+
 gssincludedir = $(includedir)/gssapi
 
 gssdir = $(libdir)/gss
@@ -54,5 +56,11 @@ test_sanon_SOURCES = test_sanon.c
 test_sanon_LDFLAGS = @KRB5_LDFLAGS@
 test_sanon_LDADD   = @KRB5_LIBS@
 
-test:
-
+#
+# We can only run the tests in-tree with a recent version of MIT
+# that supports GSS_MECH_CONFIG (landed at the same time as NegoEx).
+#
+test: $(builddir)/test_sanon $(builddir)/mech-test
+if NEGOEX
+	GSS_MECH_CONFIG=$(builddir)/mech-test $(builddir)/test_sanon
+endif
