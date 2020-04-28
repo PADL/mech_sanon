@@ -8,15 +8,7 @@ language: c
 before_install:
     - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get update -qq; fi
     - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install -qq libkrb5-3 libkrb5-dev libgssapi-krb5-2 krb5-config krb5-doc krb5-locales krb5-multidev krb5-gss-samples; fi
-    - mkdir ci-build
     - ./autogen.sh
-
-install:
-    - cd ci-build
-    - ../configure --srcdir=`dirname "$PWD"` --enable-maintainer-mode
-    - ulimit -c unlimited; make -j3
-
-after_failure:
 
 compiler:
     - clang
