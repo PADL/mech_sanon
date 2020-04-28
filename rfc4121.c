@@ -182,7 +182,7 @@ rfc4121_ctx_size(krb5_context kcontext,
      */
     ret = EINVAL;
     required = 4 + mech_used->length;
-    required += 2 * sizeof(int32_t);
+    required += 20 * sizeof(int32_t);
     required += 2 * sizeof(int64_t);
     required += sizeof(seed);
 
