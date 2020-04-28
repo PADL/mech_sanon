@@ -58,6 +58,9 @@ gss_import_name(OM_uint32 *minor,
 {
     int is_anonymous;
 
+    if (input_name_type == GSS_C_NO_OID)
+	input_name_type = GSS_C_NT_USER_NAME; /* matches Heimdal */
+
     *minor = 0;
     is_anonymous = is_anonymous_identity_p(input_name_buffer, input_name_type);
 
