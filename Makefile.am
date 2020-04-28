@@ -8,7 +8,7 @@ gss_LTLIBRARIES = mech_sanon.la
 
 mech_sanon_la_CFLAGS   = -Werror -Wall -Wunused-parameter @KRB5_CFLAGS@
 mech_sanon_la_CPPFLAGS = -DGSSAPI_CALLCONV=KRB5_CALLCONV -DBUILD_GSSSANON_LIB -I$(srcdir)/x25519 -I$(srcdir)
-mech_sanon_la_DEPENDENCIES = $(GSSSANON_EXPORTS)
+mech_sanon_la_DEPENDENCIES = $(srcdir)/mech_sanon.exports
 mech_sanon_la_LDFLAGS  = -avoid-version -module -export-symbols $(srcdir)/mech_sanon.exports -no-undefined @KRB5_LDFLAGS@
 mech_sanon_la_LIBADD   = @KRB5_LIBS@ 
 
