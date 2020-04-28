@@ -72,8 +72,9 @@ else
 	printf "Kerberos found in $krb5dir\n";
 	AC_SUBST(COMPILE_ET)
 	AC_CHECK_LIB(krb5, krb5_externalize_opaque, [AC_DEFINE_UNQUOTED([HAVE_KRB5_EXTERNALIZE_OPAQUE], 1, [Define if krb5 library uses old serialization API])], [], "$KRB5_LIBS")
-	AC_CHECK_LIB(krb5, GSS_C_INQ_NEGOEX_KEY, [AC_DEFINE_UNQUOTED([HAVE_GSS_C_INQ_NEGOEX_KEY], 1, [Define if GSS-API library supports NegoEx])], [], "$KRB5_LIBS")
-	AC_CHECK_LIB(krb5, GSS_C_MA_NEGOEX_AND_SPNEGO, [AC_DEFINE_UNQUOTED([HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO], 1, [Define if GSS-API library supports exposing mechanism through both NegoEx and SPNEGO])], [], "$KRB5_LIBS")
+	AC_CHECK_LIB(gssapi_krb5, gss_inquire_attrs_for_mech, [AC_DEFINE_UNQUOTED([HAVE_GSS_INQUIRE_ATTRS_FOR_MECH], 1, [Define if GSS-API library supports RFC 5587])], [], "$KRB5_LIBS")
+	AC_CHECK_LIB(gssapi_krb5, GSS_C_INQ_NEGOEX_KEY, [AC_DEFINE_UNQUOTED([HAVE_GSS_C_INQ_NEGOEX_KEY], 1, [Define if GSS-API library supports NegoEx])], [], "$KRB5_LIBS")
+	AC_CHECK_LIB(gssapi_krb5, GSS_C_MA_NEGOEX_AND_SPNEGO, [AC_DEFINE_UNQUOTED([HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO], 1, [Define if GSS-API library supports exposing mechanism through both NegoEx and SPNEGO])], [], "$KRB5_LIBS")
 	AC_CHECK_TYPE(gss_const_name_t, [AC_DEFINE([MECHSANON_GSS_CONST_NAME_T_IS_POINTER], 1, [Define if gss_const_name_t is a pointer. Broken krb5 10.x headers define it as a struct.])], [], [[#include <gssapi/gssapi.h>]])
 	AC_SUBST(KRB5_CFLAGS)
 	AC_SUBST(KRB5_LDFLAGS)

@@ -36,6 +36,8 @@
 
 #include "sanon_locl.h"
 
+#ifdef HAVE_GSS_INQUIRE_ATTRS_FOR_MECH
+
 #define MA_ADD(ma, set)    do { \
     major = gss_add_oid_set_member(minor, (gss_OID)(ma), (set));            \
     if (GSS_ERROR(major))                                                   \
@@ -63,7 +65,6 @@ gss_inquire_attrs_for_mech(OM_uint32 *minor,
         if (GSS_ERROR(major))
             goto cleanup;
 
-#ifdef HAVE_GSS_INQUIRE_ATTRS_FOR_MECH
 	MA_SUPPORTED(GSS_C_MA_MECH_CONCRETE);
         MA_SUPPORTED(GSS_C_MA_ITOK_FRAMED);
         MA_SUPPORTED(GSS_C_MA_AUTH_INIT_ANON);
@@ -76,9 +77,8 @@ gss_inquire_attrs_for_mech(OM_uint32 *minor,
         MA_SUPPORTED(GSS_C_MA_OOS_DET);
         MA_SUPPORTED(GSS_C_MA_CBINDINGS);
         MA_SUPPORTED(GSS_C_MA_CTX_TRANS);
-# if defined(HAVE_GSS_C_INQ_NEGOEX_KEY) && defined(HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO)
+#if defined(HAVE_GSS_C_INQ_NEGOEX_KEY) && defined(HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO)
         MA_SUPPORTED(GSS_C_MA_NEGOEX_AND_SPNEGO);
-# endif
 #endif
     }
 
@@ -87,7 +87,6 @@ gss_inquire_attrs_for_mech(OM_uint32 *minor,
         if (GSS_ERROR(major))
             goto cleanup;
 
-#ifdef HAVE_GSS_INQUIRE_ATTRS_FOR_MECH
         MA_KNOWN(GSS_C_MA_MECH_CONCRETE);
         MA_KNOWN(GSS_C_MA_MECH_PSEUDO);
         MA_KNOWN(GSS_C_MA_MECH_COMPOSITE);
@@ -115,9 +114,8 @@ gss_inquire_attrs_for_mech(OM_uint32 *minor,
         MA_KNOWN(GSS_C_MA_PFS);
         MA_KNOWN(GSS_C_MA_COMPRESS);
         MA_KNOWN(GSS_C_MA_CTX_TRANS);
-# if defined(HAVE_GSS_C_INQ_NEGOEX_KEY) && defined(HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO)
+#if defined(HAVE_GSS_C_INQ_NEGOEX_KEY) && defined(HAVE_GSS_C_MA_NEGOEX_AND_SPNEGO)
         MA_KNOWN(GSS_C_MA_NEGOEX_AND_SPNEGO);
-# endif
 #endif
     }
 
@@ -132,3 +130,5 @@ cleanup:
 
     return major;
 }
+
+#endif /* HAVE_GSS_INQUIRE_ATTRS_FOR_MECH */
