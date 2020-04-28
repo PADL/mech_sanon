@@ -105,6 +105,22 @@ copy_buffer(OM_uint32 *minor, gss_const_buffer_t src, gss_buffer_t dst)
     return GSS_S_COMPLETE;
 }
 
+static inline OM_uint32
+make_string_buffer(OM_uint32 *minor, const char *msg, gss_buffer_t dst)
+{
+    OM_uint32 major;
+    gss_buffer_desc src;
+
+    src.length = strlen(msg) + 1; /* \0 terminate */
+    src.value = (char *)msg;
+
+    major = copy_buffer(minor, &src, dst);
+    if (major == GSS_S_COMPLETE)
+	src.length--;
+
+    return major;
+}
+
 static inline void
 encode_be_uint32(uint32_t n, uint8_t *p)
 {
