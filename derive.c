@@ -78,8 +78,9 @@ SP800_108_HMAC(const struct krb5_hash_provider *hash,
     encode_be_uint32(outrnd->length * 8, lbuf);
 
     ret = krb5int_hmac(hash, inkey, iov, 5, &prf);
-    if (!ret)
+    if (ret == 0)
         memcpy(outrnd->data, prf.data, outrnd->length);
+
     secure_zero_memory(prf.data, prf.length);
     free(prf.data);
 
